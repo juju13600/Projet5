@@ -82,4 +82,22 @@ function fail(color, quantity) {
       confirmation()
   }
   button.addEventListener("click", addClick)
-  
+  /*Sauvegarde dans le local Storage*/
+  const saveProduct = (color, quantity) => {
+    const key = `${id}-${color}`
+    const data = {
+        id: key,
+        color: color,
+        quantity: Number(quantity),
+        price: itemPrice,
+        imageUrl: imgUrl,
+        altTxt: altText,
+        name: articleName
+    }
+    localStorage.setItem(key, JSON.stringify(data))
+}
+/*Envoie vers la page du panier*/
+const confirmation = () => {
+    window.location.href = "cart.html"
+}
+
