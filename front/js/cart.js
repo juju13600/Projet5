@@ -103,3 +103,66 @@ function addQuantityToSettings(settings, item) {
     quantity.appendChild(input)
     settings.appendChild(quantity)
 }
+/*Ajout de la quantité totale*/
+function displayTotalQuantity() {
+    const totalQuantity = document.querySelector("#totalQuantity")
+    const total = cart.reduce((total, item) => total + item.quantity, 0)
+    totalQuantity.textContent = total
+}
+
+/*Ajout du prix total*/
+function displayTotalPrice() {
+    const totalPrice = document.querySelector("#totalPrice")
+    const total = cart.reduce((total, item) => total + item.price * item.quantity, 0)
+    totalPrice.textContent = total
+}
+/*Ajout de l'option de suppression*/
+function addDeleteToSettings(settings, item) {
+    const div = document.createElement("div")
+    div.classList.add("cart__item__content__settings__delete")
+    div.addEventListener("click", () => deleteItem(item))
+
+    const p = document.createElement("p")
+    p.textContent = "Supprimer"
+    div.appendChild(p)
+    settings.appendChild(div)
+}
+/* Option de suppression d'un produit*/
+function deleteItem(item) {
+    const itemToDelete = cart.findIndex(
+        (product) => product.id === item.id && product.color === item.color
+    )
+    cart.splice(itemToDelete, 1)
+    displayTotalPrice()
+    displayTotalQuantity()
+    deleteDataFromCache(item)  
+    deleteArticleFromPage(item)    
+}
+/*Supression d'un produit de la page*/
+function deleteArticleFromPage(item) {
+    const articleToDelete = document.querySelector(
+        `article[data-id="${item.id}"][data-color="${item.color}"]`
+    )
+    articleToDelete.remove()
+}
+/*Actualisation prix et quantité*/
+function updatePriceAndQuantity(id, newValue, item) {
+    const itemToUpdate = cart.find((item) => item.id === id)
+    itemToUpdate.quantity = Number(newValue)
+    item.quantity = itemToUpdate.quantity
+    displayTotalQuantity()
+    displayTotalPrice()
+    saveNewDataToCache(item)
+}
+/*Option de suppression produit du localstorage*/
+function deleteDataFromCache(item) {
+    const key = `${item.id}-${item.color}`
+    localStorage.removeItem(key)
+}
+/*Stockage des données dans le localStorage*/
+function saveNewDataToCache(item) {
+    const dataToSave = JSON.stringify(item)
+    const key = item.id
+    localStorage.setItem(key, dataToSave)
+
+}
