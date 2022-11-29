@@ -259,4 +259,34 @@ function submitForm(e) {
       return false
   })
   }
- 
+  /*Récupération des informations du formulaire*/
+  function makeRequestBody() {
+    const form = document.querySelector(".cart__order__form")
+    const firstName = form.elements.firstName.value
+    const lastName = form.elements.lastName.value
+    const address = form.elements.address.value
+    const city = form.elements.city.value
+    const email = form.elements.email.value
+    const body = {
+        contact: {
+            firstName: firstName,
+            lastName: lastName,
+            address: address,
+            city: city,
+            email: email
+        },
+        products: getIdsFromCache()
+    }
+    return body
+    }
+    /*Récupération de l'id afin de l'ajouter au numéro*/
+    function getIdsFromCache() {
+    const numberOfProducts = localStorage.length
+    const ids = []
+    for (let i = 0; i < numberOfProducts; i++) {
+        const key = localStorage.key(i)
+        const id = key.split("-")[0]
+        ids.push(id)
+    }
+        return ids
+    }
