@@ -166,3 +166,97 @@ function saveNewDataToCache(item) {
     localStorage.setItem(key, dataToSave)
 
 }
+/*Création du formulaire de commande*/
+function submitForm(e) {
+    e.preventDefault()
+    if (cart.length === 0) {
+        alert("Choisissez un article SVP")
+        return
+    }
+  
+    if (isFormInvalid()) return
+    if (isFirstNameInvalid()) return
+    if (isLastNameInvalid()) return
+    if (isAddressInvalid()) return
+    if (isCityInvalid()) return
+    if (isEmailInvalid()) return
+  
+    const body = makeRequestBody()
+  /* Envoie des données avec POST*/
+    fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            const orderId = data.orderId
+            window.location.href = "confirmation.html" + "?orderId=" + orderId
+        })
+        .catch((err) => console.error(err))
+  }
+  /*Vérification du prénom*/
+  function isFirstNameInvalid() {
+  const email = document.querySelector("#firstName").value
+  const regex = /^[a-zA-Z ,.'-]+$/
+  if (regex.test(email) === false) {
+      alert("Saisir un prénom valide SVP")
+      return true
+  }
+  return false
+  }
+  /*Vérification du nom*/
+  function isLastNameInvalid() {
+  const email = document.querySelector("#lastName").value
+  const regex = /^[a-zA-Z ,.'-]+$/
+  if (regex.test(email) === false) {
+      alert("Saisir un nom valide SVP ")
+      return true
+  }
+  return false
+  }
+  /* Vérification de l'adresse*/
+  function isAddressInvalid() {
+  const email = document.querySelector("#address").value
+  const regex = /^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/
+  if (regex.test(email) === false) {
+      alert("Saisir une adresse valide SVP")
+      return true
+  }
+  return false
+  }
+  /*Vérification de la ville*/
+  function isCityInvalid() {
+  const email = document.querySelector("#city").value
+  const regex = /^[a-zA-Z ,.'-]+$/
+  if (regex.test(email) === false) {
+      alert("Saisir une ville valide SVP")
+      return true
+  }
+  return false
+  }
+  /*Vérifiction de l'adresse mail*/
+  function isEmailInvalid() {
+  const email = document.querySelector("#email").value
+  const regex = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/
+  if (regex.test(email) === false) {
+      alert("Saisir une adresse mail valide SVP")
+      return true
+  }
+  return false
+  }
+  /*Validation du formulaire et confimation formulaire*/
+  function isFormInvalid() {
+  const form = document.querySelector(".cart__order__form")
+  const inputs = form.querySelectorAll("input")
+  inputs.forEach((input) => {
+      if (input.value === "") {
+          alert("Remplissez tous les champs SVP")
+          return true
+      }
+      return false
+  })
+  }
+ 
